@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>카테고리 목록</title>
+    <style>
+        body { font-family: 'Malgun Gothic', Arial, sans-serif; max-width: 700px; margin: 40px auto; padding: 0 20px; color: #333; }
+        h1 { border-bottom: 2px solid #4a90d9; padding-bottom: 10px; color: #2c3e50; }
+        .btn { display: inline-block; padding: 8px 16px; background: #4a90d9; color: white; text-decoration: none; border-radius: 4px; margin-bottom: 16px; }
+        .btn-danger { background: #e74c3c; border: none; cursor: pointer; font-size: 0.9em; padding: 6px 12px; color: white; border-radius: 4px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; border-bottom: 1px solid #dee2e6; text-align: left; }
+        th { background: #f8f9fa; font-weight: bold; }
+        .alert-success { background: #d4edda; color: #155724; padding: 12px; border-radius: 4px; margin-bottom: 16px; }
+        .alert-error { background: #f8d7da; color: #721c24; padding: 12px; border-radius: 4px; margin-bottom: 16px; }
+    </style>
+</head>
+<body>
+    <h1>카테고리 목록</h1>
+
+    <p th:if="${successMsg}" class="alert-success" th:text="${successMsg}"></p>
+    <p th:if="${errorMsg}" class="alert-error" th:text="${errorMsg}"></p>
+
+    <a class="btn" th:href="@{/categories/create}">+ 카테고리 등록</a>
+    <a class="btn" style="background:#6c757d;" th:href="@{/products}">← 상품 목록</a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>카테고리명</th>
+                <th>삭제</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="cat : ${categories}">
+                <td th:text="${cat.id}"></td>
+                <td th:text="${cat.name}"></td>
+                <td>
+                    <form th:action="@{/categories/{id}/delete(id=${cat.id})}" method="post">
+                        <button class="btn-danger" type="submit">삭제</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <footer style="margin-top:40px; padding:16px; background:#f5f5f5; text-align:center; font-size:13px; color:#555;">
+        <p th:text="'실습 수행 일시: ' + ${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd HH:mm:ss')} + ' | 학번: 2071055 | 성명: 최준원'"></p>
+    </footer>
+</body>
+</html>

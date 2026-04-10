@@ -37,9 +37,12 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+    private final kr.ac.hansung.cse.service.CategoryService categoryService;
 
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService,
+                            kr.ac.hansung.cse.service.CategoryService categoryService) {
         this.productService = productService;
+        this.categoryService = categoryService;
     }
 
 
@@ -48,12 +51,16 @@ public class ProductController {
     // ─────────────────────────────────────────────────────────────────
 
     @GetMapping
-    public String listProducts(Model model) {
-        List<Product> products = productService.getAllProducts();
+    public String listProducts(@RequestParam(required = false) String keyword,
+                            @RequestParam(required = false) Long categoryId,
+                            Model model) {
+        List<Product> products = productService.searchProducts(keyword, categoryId);
         model.addAttribute("products", products);
+        model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("categoryId", categoryId);
         return "productList";
     }
-
     // ─────────────────────────────────────────────────────────────────
     // GET /products/{id} - 상품 상세 조회
     // ─────────────────────────────────────────────────────────────────

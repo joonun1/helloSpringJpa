@@ -131,4 +131,24 @@ public class ProductRepository {
             entityManager.remove(product);
         }
     }
+    public List<Product> search(String keyword, Long categoryId) {
+    String jpql = "SELECT p FROM Product p LEFT JOIN FETCH p.category c WHERE 1=1";
+    if (keyword != null && !keyword.isEmpty()) {
+        jpql += " AND p.name LIKE :keyword";
+    }
+    if (categoryId != null) {
+        jpql += " AND c.id = :categoryId";
+    }
+    jpql += " ORDER BY p.id ASC";
+
+    TypedQuery<Product> query = entityManager.createQuery(jpql, Product.class);
+
+    if (keyword != null && !keyword.isEmpty()) {
+        query.setParameter("keyword", "%" + keyword + "%");
+    }
+    if (categoryId != null) {
+        query.setParameter("categoryId", categoryId);
+    }
+    return query.getResultList();
+}
 }

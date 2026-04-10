@@ -20,13 +20,18 @@ public class CategoryService {
         return categoryRepository.findAll();
     }
 
+    public Category getCategoryById(Long id) {
+    return categoryRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 카테고리입니다: " + id));
+    }
+
     @Transactional
     public Category createCategory(String name) {
         categoryRepository.findByName(name)
                 .ifPresent(c -> { throw new DuplicateCategoryException(name); });
         return categoryRepository.save(new Category(name));
     }
-
+    // 카테고리 삭제: 연결된 상품이 있으면 삭제 불가
     @Transactional
     public void deleteCategory(Long id) {
         long count = categoryRepository.countProductsByCategoryId(id);
